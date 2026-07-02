@@ -30,7 +30,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json());
 
@@ -48,12 +48,13 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Bus Booking API");
 });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("✅ MongoDB connected"))
-.catch((err) => console.error('MongoDB connection error:', err));
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("✅ MongoDB connected"))
+    .catch((err) => console.error('MongoDB connection error:', err));
+} else {
+  console.warn('MONGO_URI is not set; skipping MongoDB connection at startup');
+}
 
 // ✅ Export app (for Vercel)
 module.exports = app;
