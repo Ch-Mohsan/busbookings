@@ -6,10 +6,31 @@ const app = express();
 
 dotenv.config();
 
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true // if you use cookies/auth
-}));
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'https://busbookings.vercel.app'
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin) || /^https:\/\/.*\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked origin: ${origin}`));
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
