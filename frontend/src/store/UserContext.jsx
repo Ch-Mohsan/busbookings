@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 // More flexible API URL configuration
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/users';
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 const TOKEN_KEY = 'busBookingToken';
 const USER_KEY = 'busBookingUser';
 
